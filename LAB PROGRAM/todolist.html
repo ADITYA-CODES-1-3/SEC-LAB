@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title> To-Do List</title>
+  <style>
+    /* Base reset */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9fafb;
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 50px 15px;
+    }
+
+    .container {
+      background-color: #fff;
+      max-width: 480px;
+      width: 100%;
+      padding: 32px 36px;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    h2 {
+      font-weight: 700;
+      font-size: 1.8rem;
+      margin: 0 0 8px;
+      text-align: center;
+      color: #111827;
+      letter-spacing: 0.04em;
+    }
+
+    textarea#taskInput {
+      width: 100%;
+      resize: vertical;
+      min-height: 70px;
+      font-size: 1rem;
+      padding: 12px 16px;
+      border: 1.8px solid #d1d5db;
+      border-radius: 8px;
+      transition: border-color 0.25s ease;
+      font-family: inherit;
+      color: #111827;
+    }
+    textarea#taskInput::placeholder {
+      color: #9ca3af;
+      font-style: italic;
+    }
+    textarea#taskInput:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 5px rgba(37, 99, 235, 0.5);
+    }
+
+    #addBtn {
+      background-color: #2563eb;
+      border: none;
+      padding: 14px 0;
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.25s ease;
+      user-select: none;
+      width: 100%;
+    }
+    #addBtn:hover {
+      background-color: #1e40af;
+    }
+    #addBtn:active {
+      background-color: #1e3a8a;
+    }
+
+    ul#taskList {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      max-height: 320px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    ul#taskList::-webkit-scrollbar {
+      width: 7px;
+    }
+    ul#taskList::-webkit-scrollbar-thumb {
+      background-color: #a5b4fc;
+      border-radius: 10px;
+    }
+    ul#taskList::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      background-color: #f3f4f6;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.07);
+      font-size: 1rem;
+      color: #111827;
+      user-select: none;
+      cursor: default;
+      transition: background-color 0.2s ease;
+    }
+    li:hover {
+      background-color: #e0e7ff;
+    }
+
+    li.completed {
+      color: #6b7280;
+      text-decoration: line-through;
+      font-style: italic;
+      background-color: #e5e7eb;
+      cursor: text;
+    }
+    li.completed:hover {
+      background-color: #d1d5db;
+    }
+
+    .task-text {
+      flex-grow: 1;
+      cursor: pointer;
+      user-select: text;
+      padding-right: 20px;
+      word-break: break-word;
+    }
+
+    .remove-btn {
+      background: transparent;
+      border: none;
+      color: #ef4444;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: 8px;
+      transition: background-color 0.2s ease;
+      user-select: none;
+    }
+    .remove-btn:hover {
+      background-color: #fee2e2;
+    }
+    .remove-btn:active {
+      background-color: #fecaca;
+    }
+
+    @media (max-width: 520px) {
+      .container {
+        padding: 24px 20px;
+      }
+      h2 {
+        font-size: 1.5rem;
+      }
+      li {
+        font-size: 0.95rem;
+        padding: 12px 16px;
+      }
+      .remove-btn {
+        padding: 5px 8px;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="container" role="main" aria-label="Simple To-Do List Application">
+    <h2>To-Do List</h2>
+    <textarea id="taskInput" rows="3" placeholder="Write your task here..." aria-label="Task input"></textarea>
+    <button id="addBtn" aria-label="Add task">Add Task</button>
+
+    <ul id="taskList" aria-live="polite" aria-relevant="additions removals"></ul>
+  </main>
+
+  <script>
+    const taskInput = document.getElementById('taskInput');
+    const addBtn = document.getElementById('addBtn');
+    const taskList = document.getElementById('taskList');
+
+    function addTask() {
+      const taskText = taskInput.value.trim();
+      if (!taskText) {
+        alert('Please enter a task!');
+        return;
+      }
+
+      const li = document.createElement('li');
+
+      const span = document.createElement('span');
+      span.textContent = taskText;
+      span.classList.add('task-text');
+
+      span.addEventListener('click', () => {
+        li.classList.toggle('completed');
+      });
+
+      const removeBtn = document.createElement('button');
+      removeBtn.textContent = 'Remove';
+      removeBtn.classList.add('remove-btn');
+      removeBtn.setAttribute('aria-label', `Remove task: ${taskText}`);
+
+      removeBtn.addEventListener('click', () => {
+        taskList.removeChild(li);
+      });
+
+      li.appendChild(span);
+      li.appendChild(removeBtn);
+
+      taskList.appendChild(li);
+
+      taskInput.value = '';
+      taskInput.focus();
+    }
+
+    addBtn.addEventListener('click', addTask);
+
+    taskInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        addTask();
+      }
+    });
+  </script>
+</body>
+</html>
