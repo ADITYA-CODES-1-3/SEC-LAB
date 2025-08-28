@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DIGITAL WATCH</title>
+    <style>
+        #clock {
+            font-family: Brush Script MT;
+            font-size: 48px;
+            text-align: center;
+            margin-top: 20vh;
+        }
+    </style>
+</head>
+<body>
+    <div id="clock">Loading...</div>
+    <script>
+        function updateClock() {
+            let now = new Date();
+            let hour = now.getHours();
+            let min = now.getMinutes();
+            let sec = now.getSeconds();
+            let ampm = hour >= 12 ? 'PM' : 'AM';
+
+            hour = hour % 12;
+            hour = hour ? hour : 12; 
+
+            const hh = String(hour).padStart(2, '0');
+            const mm = String(min).padStart(2, '0');
+            const ss = String(sec).padStart(2, '0');
+
+            document.getElementById('clock').textContent = `${hh}:${mm}:${ss} ${ampm}`;
+        }
+
+        updateClock();
+        setInterval(updateClock, 1000);
+    </script>
+</body>
+</html>
