@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Contact Management Module</title>
+    <style>
+        body { font-family: sans-serif; background-color: #2b2b2b; color: #f0f0f0; padding: 2rem; }
+        h1 { color: #64c8ff; }
+    </style>
+</head>
+<body>
+    <h1>Contact Management Module 📞</h1>
+    <p>Check the browser's console (F12 or Ctrl+Shift+I) to see the output.</p>
+
+    <script>
+        let contacts = [
+            {
+                name: "Aisha Sharma",
+                phone: "9876543210",
+                email: "aisha.s@example.com",
+                displayContactInfo: function() {
+                    const { name, phone, email } = this;
+                    console.log(`Name: ${name}, Phone: ${phone}, Email: ${email}`);
+                }
+            },
+            {
+                name: "Ben Carter",
+                phone: "8765432109",
+                email: "ben.c@example.com",
+                displayContactInfo: function() {
+                    const { name, phone, email } = this;
+                    console.log(`Name: ${name}, Phone: ${phone}, Email: ${email}`);
+                }
+            }
+        ];
+
+        contacts.forEach(contact => contact.displayContactInfo());
+
+        function iterateAndPrint(contactList) {
+            console.log("Iterating through contacts:");
+            for (const contact of contactList) {
+                const name = contact.name;
+                const email = contact['email'];
+                console.log(`-> Found Contact: ${name} (Email: ${email})`);
+            }
+        }
+        iterateAndPrint(contacts);
+
+        function addContacts(...newContacts) {
+            contacts.push(...newContacts);
+            console.log(`${newContacts.length} new contact(s) added.`);
+        }
+
+        addContacts(
+            { name: "Charlie Davis", phone: "7654321098", email: "charlie.d@example.com" },
+            { name: "Diana Prince", phone: "6543210987", email: "diana.p@example.com" }
+        );
+        console.log("Current contacts:", contacts.length);
+        
+        const additionalContacts = [
+            { name: "Ethan Hunt", phone: "5432109876", email: "ethan.h@example.com" },
+            { name: "Fiona Glenanne", phone: "4321098765", email: "fiona.g@example.com" }
+        ];
+
+        const allContacts = [...contacts, ...additionalContacts];
+        console.log("Merged array created. Total contacts:", allContacts.length);
+
+        const contactWithoutMethod = {
+            name: "Gary Smith",
+            phone: "1234567890",
+            email: "gary.s@example.com"
+        };
+        
+        const displayMethod = contacts[0].displayContactInfo;
+
+        console.log("\nUsing .call():");
+        displayMethod.call(contactWithoutMethod);
+
+        console.log("\nUsing .apply():");
+        displayMethod.apply(contactWithoutMethod, []);
+
+        console.log("\nUsing .bind():");
+        const displayForGary = displayMethod.bind(contactWithoutMethod);
+        displayForGary();
+
+    </script>
+</body>
+</html>
