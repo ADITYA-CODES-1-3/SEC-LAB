@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Digital Watch</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #f5f5f5;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    #clock {
+      font-size: 3.5em;
+      font-weight: 600;
+      padding: 30px 50px;
+      background: #ffffff;
+      color: #333;
+      border: 1px solid #ddd;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      letter-spacing: 0.05em;
+      font-variant-numeric: tabular-nums;
+      user-select: none;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="clock" role="timer" aria-live="polite">Loading...</div>
+
+  <script>
+    function updateClock() {
+      const now = new Date();
+      let hour = now.getHours();
+      const min = now.getMinutes();
+      const sec = now.getSeconds();
+      const ampm = hour >= 12 ? 'PM' : 'AM';
+
+      hour = hour % 12;
+      hour = hour ? hour : 12;
+
+      const hh = String(hour).padStart(2, '0');
+      const mm = String(min).padStart(2, '0');
+      const ss = String(sec).padStart(2, '0');
+
+      document.getElementById('clock').textContent = `${hh}:${mm}:${ss} ${ampm}`;
+    }
+
+    updateClock();
+    setInterval(updateClock, 1000);
+  </script>
+</body>
+</html>
