@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stopwatch</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      padding: 0;
+      margin: 0;
+    }
+
+    body {
+      background: #f5f5f5;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      color: #4a4a4a;
+    }
+
+    .stopwatch {
+      background: #ffffff;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      width: 350px;
+    }
+
+    .display {
+      font-size: 3em;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: #333333;
+      letter-spacing: 0.05em;
+      font-variant-numeric: tabular-nums;
+      user-select: none;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      flex: 1;
+      padding: 12px 0;
+      background: #e0e0e0;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #6b6b6b;
+      box-shadow: inset 0 0 0 1px #c0c0c0;
+    }
+
+    button:hover {
+      background: #d0d0d0;
+      color: #3a3a3a;
+      box-shadow: inset 0 0 0 1px #a0a0a0, 0 0 8px rgba(0, 0, 0, 0.1);
+    }
+
+    button:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(100, 149, 237, 0.4); /* soft cornflower blue focus */
+    }
+
+    svg {
+      width: 24px;
+      height: 24px;
+      fill: currentColor;
+    }
+
+    .laps {
+      max-height: 200px;
+      overflow-y: auto;
+      padding: 10px;
+      background: #fafafa;
+      border-radius: 12px;
+      border: 1px solid #ddd;
+      color: #666;
+      font-size: 0.95rem;
+      font-variant-numeric: tabular-nums;
+      user-select: none;
+    }
+
+    .lap {
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .lap:last-child {
+      border-bottom: none;
+    }
+
+    .laps::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .laps::-webkit-scrollbar-thumb {
+      background-color: #bbb;
+      border-radius: 10px;
+    }
+
+    .laps::-webkit-scrollbar-track {
+      background-color: #f1f1f1;
+    }
+  </style>
+</head>
+<body>
+   <h1> JS STOPWATCH</h1>
+  <div class="stopwatch" role="region" aria-label="Stopwatch">
+    <div class="display" id="display" aria-live="polite" aria-atomic="true">00:00:00</div>
+    <div class="buttons">
+      <button id="startStopBtn" aria-pressed="false" aria-label="Start stopwatch" onclick="toggleStartStop()">
+        <!-- Play icon -->
+        <svg id="iconPlayPause" viewBox="0 0 24 24" aria-hidden="true">
+          <path id="playIcon" d="M8 5v14l11-7z"/>
+          <path id="pauseIcon" d="M6 19h4V5H6zm8-14v14h-4V5z" style="display:none"/>
+        </svg>
+      </button>
+      <button id="resetBtn" aria-label="Reset stopwatch" onclick="reset()">
+        <!-- New reset/refresh icon -->
+        <svg viewBox="0 0 24 24" aria-hidden="true" >
+        <path d="M12 4V1L8 5l4 4V6a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z"/>
+        </svg>
+      </button>
+
+      <button id="lapBtn" aria-label="Record lap time" onclick="lap()">
+        <!-- Lap/list icon -->
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M3 6h18v2H3V6zm0 5h12v2H3v-2zm0 5h18v2H3v-2z"/>
+        </svg>
+      </button>
+
+    </div>
+    <div class="laps" id="laps" aria-live="polite" aria-atomic="false" role="list"></div>
+  </div>
+
+  <script>
+    let [ms, sec, min] = [0, 0, 0];
+    let timer = null;
+    let isRunning = false;
+
+    const display = document.getElementById("display");
+    const laps = document.getElementById("laps");
+    const startStopBtn = document.getElementById("startStopBtn");
+    const iconPlay = document.getElementById("playIcon");
+    const iconPause = document.getElementById("pauseIcon");
+
+    function updateDisplay() {
+      const m = String(min).padStart(2, '0');
+      const s = String(sec).padStart(2, '0');
+      const milliseconds = String(ms).padStart(2, '0');
+      display.textContent = `${m}:${s}:${milliseconds}`;
+    }
+
+    function toggleStartStop() {
+      if (!isRunning) {
+        timer = setInterval(() => {
+          ms++;
+          if (ms === 100) {
+            ms = 0;
+            sec++;
+          }
+          if (sec === 60) {
+            sec = 0;
+            min++;
+          }
+          updateDisplay();
+        }, 10);
+        isRunning = true;
+        startStopBtn.setAttribute('aria-pressed', 'true');
+        startStopBtn.setAttribute('aria-label', 'Stop stopwatch');
+        iconPlay.style.display = 'none';
+        iconPause.style.display = 'block';
+      } else {
+        clearInterval(timer);
+        isRunning = false;
+        startStopBtn.setAttribute('aria-pressed', 'false');
+        startStopBtn.setAttribute('aria-label', 'Start stopwatch');
+        iconPlay.style.display = 'block';
+        iconPause.style.display = 'none';
+      }
+    }
+
+    function reset() {
+      clearInterval(timer);
+      [ms, sec, min] = [0, 0, 0];
+      isRunning = false;
+      updateDisplay();
+      startStopBtn.setAttribute('aria-pressed', 'false');
+      startStopBtn.setAttribute('aria-label', 'Start stopwatch');
+      iconPlay.style.display = 'block';
+      iconPause.style.display = 'none';
+      laps.innerHTML = '';
+    }
+
+    function lap() {
+      if (!isRunning && ms === 0 && sec === 0 && min === 0) return;
+
+      const m = String(min).padStart(2, '0');
+      const s = String(sec).padStart(2, '0');
+      const milliseconds = String(ms).padStart(2, '0');
+      const lapTime = `${m}:${s}:${milliseconds}`;
+      const lapItem = document.createElement('div');
+      lapItem.classList.add('lap');
+      lapItem.setAttribute('role', 'listitem');
+      lapItem.textContent = `Lap ${laps.children.length + 1}: ${lapTime}`;
+      laps.prepend(lapItem);
+    }
+
+    updateDisplay();
+  </script>
+
+</body>
+</html>
