@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Regex Demo with Quantifiers and Groups</title>
+</head>
+<body>
+  <script>
+    // Quantifiers specify how many times a character or group should appear
+    // Example: 'a*' matches zero or more 'a's in a row
+    let text1 = "aaaba";
+    let pattern1 = /a*/g;  // matches sequences of zero or more 'a's globally
+    let result1 = text1.match(pattern1);
+    console.log(result1); // ["aaa", "", "a", ""] - splits where no 'a' is found too
+
+    // Modifiers (flags) change how regex matches
+    // i -> case insensitive
+    // g -> global match (all occurrences)
+    // m -> multiline match (affects ^ and $ anchors)
+    let sentence = "javascript programming  language \n java programming language ";
+    let pattern2 = /programming/igm;  // matches 'programming', case insensitive, global, multiline
+    let results2 = sentence.match(pattern2);
+    console.log(results2); // ["programming", "programming"]
+
+    // Example: Matching digits followed by word characters
+    let digichar = "001js";
+    // \d+ matches one or more digits, \w+ matches one or more word characters (letters, digits, underscore)
+    // So this pattern matches a sequence of digits followed by word characters
+    let pattern3 = /\d+\w+/g;
+    let result3 = digichar.match(pattern3);
+    console.log(result3); // ["001js"]
+
+    // Grouping parentheses is used to group parts of the regex and capture them
+    let texts = "hi kavi ";
+    // (\w+) captures one or more word characters as group 1
+    // \s+ matches one or more whitespace characters
+    // (\w+) captures one or more word characters as group 2
+    let pattern4 = /(\w+)\s+(\w+)/;
+    let result4 = texts.match(pattern4);
+    console.log(result4);    // ["hi kavi", "hi", "kavi"]
+    console.log(result4[0]); // full matched string "hi kavi"
+    console.log(result4[1]); // first group "hi"
+    console.log(result4[2]); // second group "kavi"
+
+    // Replace example: replacing all occurrences of "apple" with "orange"
+    let text5 = "apple banana apple orange";
+    let ptrn = /(apple)/g; // matches every "apple" globally
+    let rlt = text5.replace(ptrn, "orange");
+    console.log(rlt); // "orange banana orange orange"
+  </script>
+</body>
+</html>
