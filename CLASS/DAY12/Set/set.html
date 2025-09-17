@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOCAL STORAGE </title>
+</head>
+<body>
+    <script>
+        // A Set is a collection of unique values. It is part of ES6 and helps in storing values without duplicates.
+        //     Elements are not indexed (unlike arrays)
+        //     Maintains insertion order
+        //     Can store any data type: numbers, strings, objects, etc
+        // let myset = new set([iterable]);
+        let email = new Set([]);
+        email.add("aditya13@gmail.com");
+        email.add("adira@gmail.com");
+        email.add("adira@gmail.com");
+        email.add("adheera@gmail.com");
+        email.add("adheera@gmail.com");
+       
+        // email.delete("adheera@gmail.com");
+        //  console.log(email);
+        //  email.clear();
+        //  console.log(email);
+
+        for(let mailid of email){
+            console.log(mailid);
+        }
+        email.forEach(x => {
+            console.log(x);
+        })
+
+        let admin = new Set(["write","Read","Delete"]);
+        let user = new Set(["Read"]);
+        function haspermission(role,granted ){
+            return role.has(granted);
+        }
+        console.log(haspermission(admin,"Delete"));
+        console.log(haspermission(user ,"Delete"));
+
+        let a = new Set([1,2,3,4,5,1]);
+        let b = new Set([6,7,8,9,10,1]);
+        let union = new Set([...a,...b]);
+        console.log(union);
+        let intersection = new Set([...a].filter(x=>b.has(x)));
+        console.log(intersection);
+        let diff = new Set([...a].filter(x=>!b.has(x)));
+        console.log(diff);
+
+        console.log("Entries of union:");
+        for (let entry of union.entries()) {
+            console.log(entry);
+                }
+
+
+    </script>
+    
+</body>
+</html>
