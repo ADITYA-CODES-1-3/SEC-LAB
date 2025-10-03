@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Live Search Filter with Debounced Input</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      background-color: #f4f4f4;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    #searchBox {
+      display: block;
+      margin: 20px auto;
+      width: 300px;
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+      max-width: 300px;
+      margin: auto;
+    }
+
+    li {
+      background-color: white;
+      margin-bottom: 5px;
+      padding: 10px;
+      cursor: pointer;
+      border-left: 4px solid #007bff;
+      transition: background-color 0.3s;
+    }
+
+    li:hover {
+      background-color: #e6f0ff;
+    }
+
+    .container {
+      padding: 20px;
+      background: white;
+      max-width: 400px;
+      margin: auto;
+      border-radius: 6px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container" id="mainContainer">
+    <h2>Live Search Filter</h2>
+    <input type="text" id="searchBox" placeholder="Search names...">
+
+    <ul id="itemList">
+      <!-- Items will be rendered here -->
+    </ul>
+  </div>
+
+  <script>
+    // Sample list of names
+    const names = [
+      "ADITYA", "ABHI", "ADHIRA", "KAVI", "SUBA",
+      "MADHU", "RAHUL", "HARSHITHA", "SENTHIL", "SRIDHAR",
+      "SUNDAR", "JAYA"
+    ];
+
+    const searchBox = document.getElementById('searchBox');
+    const itemList = document.getElementById('itemList');
+    const container = document.getElementById('mainContainer');
+
+    // Render initial list
+    function renderList(items) {
+      itemList.innerHTML = ""; // Clear existing items
+      items.forEach(name => {
+        const li = document.createElement('li');
+        li.textContent = name;
+        li.dataset.name = name; // Custom data attribute
+        itemList.appendChild(li);
+      });
+    }
+
+    renderList(names); // Initial render
+
+    // Debounce function
+    function debounce(fn, delay) {
+      let timeoutId;
+      return function (...args) {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => fn.apply(this, args), delay);
+      };
+    }
+
+    // Filter function
+    function filterList() {
+      const query = searchBox.value.toLowerCase();
+      const filtered = names.filter(name => name.toLowerCase().includes(query));
+      renderList(filtered);
+    }
+
+    // Use debounced version of filterList
+    const debouncedFilter = debounce(filterList, 300);
+
+    // Input event with debounce
+    searchBox.addEventListener('input', debouncedFilter);
+
+    // Event delegation: handle clicks on list items
+    itemList.addEventListener('click', function (e) {
+      if (e.target && e.target.nodeName === 'LI') {
+        alert("You clicked on: " + e.target.dataset.name);
+        // Stop propagation to demonstrate bubbling control
+        e.stopPropagation();
+      }
+    });
+
+    // Bubbling :click on container logs message
+    container.addEventListener('click', function () {
+      console.log("Container clicked (bubbling demo)");
+    });
+  </script>
+
+</body>
+</html>

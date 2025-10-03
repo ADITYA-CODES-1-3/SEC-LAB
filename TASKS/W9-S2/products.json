@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Wireless Mouse",
+    "price": 19.99,
+    "description": "Ergonomic wireless mouse with adjustable DPI."
+  },
+  {
+    "name": "Mechanical Keyboard",
+    "price": 49.99,
+    "description": "RGB backlit mechanical keyboard with blue switches."
+  },
+  {
+    "name": "USB-C Hub",
+    "price": 29.99,
+    "description": "7-in-1 USB-C hub with HDMI, USB 3.0, and SD card reader."
+  }
+]

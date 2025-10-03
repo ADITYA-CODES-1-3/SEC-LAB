@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Interactive Feedback Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 40px;
+    }
+
+    form {
+      background: white;
+      padding: 20px;
+      max-width: 500px;
+      margin: auto;
+      border-radius: 6px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+
+    input[type="text"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      transition: border 0.2s;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: #007bff;
+      outline: none;
+      background-color: #f0f8ff;
+    }
+
+    .checkbox-group {
+      margin: 10px 0;
+    }
+
+    .error {
+      color: red;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+
+    .success {
+      color: green;
+      font-size: 16px;
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    button {
+      padding: 10px 15px;
+      font-size: 16px;
+      margin-top: 15px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #007bff;
+      color: white;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+
+  <form id="feedbackForm" novalidate>
+    <h2>Feedback Form</h2>
+
+    <label for="name">Name *</label>
+    <input type="text" id="name" name="name">
+    <div class="error" id="nameError"></div>
+
+    <label for="email">Email *</label>
+    <input type="text" id="email" name="email">
+    <div class="error" id="emailError"></div>
+
+    <label for="rating">How satisfied are you?</label>
+    <select id="rating">
+      <option value="">-- Select --</option>
+      <option value="very">Very Satisfied</option>
+      <option value="satisfied">Satisfied</option>
+      <option value="neutral">Neutral</option>
+      <option value="unsatisfied">Unsatisfied</option>
+    </select>
+
+    <div class="checkbox-group">
+      <label>Areas for improvement:</label>
+      <label><input type="checkbox" name="improve" value="service"> Service</label>
+      <label><input type="checkbox" name="improve" value="speed"> Speed</label>
+      <label><input type="checkbox" name="improve" value="quality"> Quality</label>
+    </div>
+
+    <label for="comments">Additional Comments</label>
+    <textarea id="comments" rows="4"></textarea>
+
+    <button type="submit" id="submitBtn">Submit</button>
+    <div class="success" id="successMsg"></div>
+  </form>
+
+  <script>
+    const form = document.getElementById('feedbackForm');
+    const nameInput = document.getElementById('name');
+    const emailInput = document.getElementById('email');
+    const ratingSelect = document.getElementById('rating');
+    const submitBtn = document.getElementById('submitBtn');
+    const nameError = document.getElementById('nameError');
+    const emailError = document.getElementById('emailError');
+    const successMsg = document.getElementById('successMsg');
+
+    // Validation function
+    function validateForm() {
+      let isValid = true;
+      nameError.textContent = "";
+      emailError.textContent = "";
+      successMsg.textContent = "";
+
+      if (nameInput.value.trim() === "") {
+        nameError.textContent = "Name is required.";
+        isValid = false;
+      }
+
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailPattern.test(emailInput.value.trim())) {
+        emailError.textContent = "Enter a valid email address.";
+        isValid = false;
+      }
+
+      return isValid;
+    }
+
+    // Event: form submit
+    form.addEventListener('submit', function (e) {
+      e.preventDefault(); // Prevent default form submission
+
+      if (validateForm()) {
+        successMsg.textContent = "Feedback submitted successfully!";
+        form.reset();
+      }
+    });
+
+    // Event: focus and blur feedback
+    [nameInput, emailInput, ratingSelect].forEach(input => {
+      input.addEventListener('focus', function () {
+        input.style.backgroundColor = '#f0f8ff';
+      });
+
+      input.addEventListener('blur', function () {
+        input.style.backgroundColor = '';
+      });
+
+      input.addEventListener('change', function () {
+        input.style.borderColor = '#007bff';
+      });
+    });
+
+    // Mouse event: change button color on mousedown/up
+    submitBtn.addEventListener('mousedown', function () {
+      submitBtn.style.backgroundColor = '#0056b3';
+      submitBtn.style.color = 'white';
+    });
+
+    submitBtn.addEventListener('mouseup', function () {
+      submitBtn.style.backgroundColor = '';
+      submitBtn.style.color = '';
+    });
+
+    // Keyboard event: highlight if Enter is pressed in a field
+    form.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        e.target.style.borderColor = 'green';
+      }
+    });
+  </script>
+</body>
+</html>

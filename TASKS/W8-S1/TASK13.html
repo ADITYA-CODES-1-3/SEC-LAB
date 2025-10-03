@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Regex Form Input Validator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      background: #f4f4f4;
+    }
+
+    form {
+      max-width: 400px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 6px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .error {
+      color: red;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+
+    .success {
+      color: green;
+      font-size: 16px;
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px;
+      width: 100%;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <form id="validatorForm" novalidate>
+    <h2>Form Validator</h2>
+
+    <label for="name">Name *</label>
+    <input type="text" id="name" />
+    <div class="error" id="nameError"></div>
+
+    <label for="email">Email *</label>
+    <input type="text" id="email" />
+    <div class="error" id="emailError"></div>
+
+    <label for="phone">Phone *</label>
+    <input type="text" id="phone" maxlength="14" />
+    <div class="error" id="phoneError"></div>
+
+    <label for="password">Password *</label>
+    <input type="password" id="password" />
+    <div class="error" id="passwordError"></div>
+
+    <button type="submit">Submit</button>
+    <div class="success" id="successMessage"></div>
+  </form>
+
+  <script>
+    const form = document.getElementById('validatorForm');
+
+    const nameInput = document.getElementById('name');
+    const emailInput = document.getElementById('email');
+    const phoneInput = document.getElementById('phone');
+    const passwordInput = document.getElementById('password');
+
+    const nameError = document.getElementById('nameError');
+    const emailError = document.getElementById('emailError');
+    const phoneError = document.getElementById('phoneError');
+    const passwordError = document.getElementById('passwordError');
+    const successMessage = document.getElementById('successMessage');
+
+    // Format phone number as (123) 456-7890 using replace
+    phoneInput.addEventListener('input', function () {
+      let cleaned = phoneInput.value.replace(/\D/g, "");
+      if (cleaned.length > 10) cleaned = cleaned.substring(0, 10);
+      const formatted = cleaned.replace(/(\d{3})(\d{3})(\d{0,4})/, function(_, p1, p2, p3) {
+        return `(${p1}) ${p2}${p3 ? "-" + p3 : ""}`;
+      });
+      phoneInput.value = formatted;
+    });
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      // Clear messages
+      nameError.textContent = "";
+      emailError.textContent = "";
+      phoneError.textContent = "";
+      passwordError.textContent = "";
+      successMessage.textContent = "";
+
+      let isValid = true;
+
+      // Name: only letters and spaces, at least 2 chars
+      const nameRegex = /^[A-Za-z\s]{2,}$/;
+      if (!nameRegex.test(nameInput.value.trim())) {
+        nameError.textContent = "Enter a valid name (letters and spaces only).";
+        isValid = false;
+      }
+
+      // Email: standard format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(emailInput.value.trim())) {
+        emailError.textContent = "Enter a valid email address.";
+        isValid = false;
+      }
+
+      // Phone: (123) 456-7890 format
+      const phoneRegex = /^\(\d{3}\)\s\d{3}-\d{4}$/;
+      if (!phoneRegex.test(phoneInput.value.trim())) {
+        phoneError.textContent = "Phone must be in (123) 456-7890 format.";
+        isValid = false;
+      }
+
+      // Password: at least 8 characters, at least one letter and one number
+      const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+      if (!passwordRegex.test(passwordInput.value.trim())) {
+        passwordError.textContent = "Password must be at least 8 characters with letters and numbers.";
+        isValid = false;
+      }
+
+      if (isValid) {
+        successMessage.textContent = "Form submitted successfully!";
+        form.reset();
+      }
+    });
+  </script>
+
+</body>
+</html>
