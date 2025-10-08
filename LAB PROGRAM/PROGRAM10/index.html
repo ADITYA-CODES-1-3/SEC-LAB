@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API</title>
+  <style>
+    /* Center the container in the page */
+    body {
+  display: flex;
+  justify-content: center; /* center container horizontally */
+  margin: 0;
+  font-family: sans-serif;
+  padding: 20px;
+}
+
+#container {
+  border: 2px solid black;
+  width: 600px;
+  display: flex;
+  flex-direction: column; /* stack car/product blocks vertically */
+  gap: 20px;
+  padding: 20px;
+  box-sizing: border-box;
+  max-height: 90vh; /* allow container to grow but not exceed viewport */
+  overflow-y: auto;  /* scroll if content exceeds height */
+}
+
+.car-item {
+  display: flex; /* horizontal layout: name + image + info */
+  align-items: center;
+  gap: 20px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.car-item h1 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.car-item img {
+  height: 100px;
+  border-radius: 8px;
+}
+
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <script src="index.js"></script>
+</body>
+</html>
